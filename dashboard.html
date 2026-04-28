@@ -11,20 +11,35 @@
     <aside class="w-64 min-h-screen bg-white border-r p-6 sticky top-0">
         <div class="font-black text-2xl mb-12 text-blue-600 italic">CloudPress</div>
         <nav class="space-y-2">
-            <button class="w-full text-left p-3 rounded-xl bg-blue-50 text-blue-600 font-bold"><i class="fa-solid fa-server mr-2"></i>인스턴스 관리</button>
-            <button class="w-full text-left p-3 rounded-xl text-slate-500 hover:bg-slate-50"><i class="fa-solid fa-globe mr-2"></i>DNS 설정</button>
-            <button class="w-full text-left p-3 rounded-xl text-slate-500 hover:bg-slate-50"><i class="fa-solid fa-credit-card mr-2"></i>결제 및 관리</button>
+            <button onclick="showSection('sites')" class="w-full text-left p-3 rounded-xl bg-blue-50 text-blue-600 font-bold"><i class="fa-solid fa-server mr-2"></i>인스턴스 관리</button>
+            <button onclick="showSection('dns')" class="w-full text-left p-3 rounded-xl text-slate-500 hover:bg-slate-50"><i class="fa-solid fa-globe mr-2"></i>DNS 설정</button>
+            <button onclick="showSection('settings')" class="w-full text-left p-3 rounded-xl text-slate-500 hover:bg-slate-50"><i class="fa-solid fa-user-gear mr-2"></i>계정 설정</button>
         </nav>
     </aside>
     <main class="flex-1 p-12">
         <header class="flex justify-between items-center mb-12">
             <h1 class="text-4xl font-black text-slate-900">내 호스팅</h1>
-            <button onclick="openCreateModal()" class="bg-blue-600 text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 transition-all">+ 새 사이트 추가</button>
+            <button onclick="openModal('create-modal')" class="bg-blue-600 text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 transition-all">+ 새 사이트 추가</button>
         </header>
-        <div id="hosting-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- JS로 동적 생성됨 -->
-        </div>
+        <div id="hosting-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
     </main>
+
+    <div id="create-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-[100]">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full mx-4 shadow-2xl">
+            <h2 class="text-2xl font-bold mb-6 text-slate-800">새 호스팅 인스턴스 생성</h2>
+            <div class="space-y-4">
+                <input type="text" id="new-hosting-name" class="w-full border p-3 rounded-xl" placeholder="호스팅 이름 (예: 내 블로그)">
+                <input type="text" id="new-hosting-domain" class="w-full border p-3 rounded-xl" placeholder="연결 도메인 (example.com)">
+                <div class="bg-blue-50 p-4 rounded-xl text-sm text-blue-800">
+                    <p>※ 생성 시 36개의 글로벌 스토리지 노드가 자동 할당되며 Anycast 네트워크에 즉시 배포됩니다.</p>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button onclick="closeModal('create-modal')" class="px-4 py-2 text-slate-500 font-medium">취소</button>
+                    <button onclick="createHosting()" class="px-6 py-2 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700">배포 시작</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="/dashboard.js"></script>
 </body>
 </html>
