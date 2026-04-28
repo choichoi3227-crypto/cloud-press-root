@@ -6,13 +6,13 @@ main = "main-worker.js"
 [[env.admin.d1_databases]]
 binding = "DB"
 database_name = "cp_main_db"
-database_id = "your-d1-id"
+database_id = "b90bb93d-4099-4989-9302-e2c6a49cad3d"
 
 [env.engine]
 main = "site-worker.js"
 [[env.engine.kv_namespaces]]
 binding = "CACHE_KV"
-id = "your-kv-id"
+id = "4751090f9b1a48508315558a5f91cd3b"
 
 [[migrations]]
 tag = "v1"
