@@ -1,0 +1,19 @@
+name = "cloudpress-system"
+compatibility_date = "2024-04-01"
+
+[env.admin]
+main = "main-worker.js"
+[[env.admin.d1_databases]]
+binding = "DB"
+database_name = "cp_main_db"
+database_id = "your-d1-id"
+
+[env.engine]
+main = "site-worker.js"
+[[env.engine.kv_namespaces]]
+binding = "CACHE_KV"
+id = "your-kv-id"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["QuotaManager", "LockManager"]
