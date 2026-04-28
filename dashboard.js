@@ -1,75 +1,63 @@
-// 인스턴스별 리소스 사용량 차트 렌더링 함수
-async function renderUsageChart(canvasId, hostingId) {
-    const ctx = document.getElementById(canvasId).getContext('2d');
-    
-    // D1 API로부터 최근 10개의 통계 데이터 가져오기
-    try {
-        const response = await fetch(`/api/stats/${hostingId}`);
-        const stats = await response.json();
-        
-        const labels = stats.map(s => new Date(s.timestamp).toLocaleTimeString());
-        const cpuData = stats.map(s => s.cpu_usage);
+let authMode = 'login';
 
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels.reverse(),
-                datasets: [{
-                    label: 'CPU 사용량 (%)',
-                    data: cpuData.reverse(),
-                    borderColor: '#2563eb',
-                    backgroundColor: 'rgba(37, 99, 235, 0.1)',
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: { display: false },
-                    y: { beginAtZero: true, max: 100, ticks: { display: false }, grid: { display: false } }
-                }
-            }
-        });
-    } catch (e) {
-        console.error("차트 로딩 실패:", e);
+function toggleAuthMode() {
+    authMode = authMode === 'login' ? 'signup' : 'login';
+    const title = document.getElementById('auth-title');
+    const desc = document.getElementById('auth-desc');
+    const submitBtn = document.getElementById('auth-submit-btn');
+    const toggleBtn = document.getElementById('auth-toggle-btn');
+    const toggleText = document.getElementById('auth-toggle-text');
+
+    if (authMode === 'signup') {
+        title.innerText = "계정 생성";
+        desc.innerText = "CloudPress의 혁신적인 인프라를 경험하세요.";
+        submitBtn.innerText = "회원가입 시작";
+        toggleBtn.innerText = "로그인";
+        toggleText.innerText = "이미 계정이 있으신가요?";
+    } else {
+        title.innerText = "반가워요!";
+        desc.innerText = "계정 정보를 입력하여 접속하세요.";
+        submitBtn.innerText = "로그인";
+        toggleBtn.innerText = "회원가입";
+        toggleText.innerText = "아직 계정이 없으신가요?";
     }
 }
 
-async function loadHostings() {
-    const list = document.getElementById('hosting-list');
-    // 실제 운영 시 /api/user/hostings 호출
-    const mockHostings = [
-        { id: 'site_1', name: '기술 블로그', domain: 'tech.blog' },
-        { id: 'site_2', name: '포트폴리오', domain: 'me.dev' }
-    ];
-    
-    list.innerHTML = mockHostings.map(h => `
-        <div class="bg-white p-6 rounded-3xl border border-slate-200 hover:shadow-xl transition-all">
-            <div class="flex justify-between items-start mb-4">
-                <span class="bg-green-100 text-green-700 text-xs font-black px-3 py-1 rounded-full uppercase">Active</span>
-            </div>
-            <h3 class="text-xl font-bold text-slate-800 mb-1">${h.name}</h3>
-            <p class="text-slate-400 text-sm font-medium mb-4">${h.domain}</p>
-            
-            <!-- 리소스 차트 영역 -->
-            <div class="h-20 w-full mb-4">
-                <canvas id="chart-${h.id}"></canvas>
-            </div>
+async function handleAuth(event) {
+    event.preventDefault();
+    const email = document.getElementById('auth-email').value;
+    const password = document.getElementById('auth-password').value;
+    const endpoint = authMode === 'login' ? '/api/auth/login' : '/api/auth/signup';
 
-            <button onclick="location.href='/hosting-detail.html?id=${h.id}'" class="w-full py-2 bg-slate-50 text-slate-600 rounded-xl text-sm font-bold hover:bg-slate-100">관리하기</button>
-        </div>
-    `).join('');
+    try {
+        const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+        const result = await res.json();
 
-    // 카드 생성 후 차트 초기화
-    mockHostings.forEach(h => renderUsageChart(`chart-${h.id}`, h.id));
+        if (result.success) {
+            if (authMode === 'login') {
+                location.href = '/dashboard.html';
+            } else {
+                alert("가입 성공! 이제 로그인해 주세요.");
+                toggleAuthMode();
+            }
+        } else {
+            alert(result.error || "인증 오류가 발생했습니다.");
+        }
+    } catch (e) {
+        alert("서버와 통신할 수 없습니다.");
+    }
 }
 
+// 모달 제어
 function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
 function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-document.addEventListener('DOMContentLoaded', loadHostings);
+// 로그아웃
+function logout() {
+    document.cookie = "session=; Max-Age=0; path=/;";
+    location.href = "/";
+}
