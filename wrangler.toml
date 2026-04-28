@@ -1,19 +1,57 @@
 name = "cloudpress-system"
-compatibility_date = "2024-04-01"
+compatibility_date = "2024-04-01" # 최신 호환성 날짜를 유지합니다.
 
+# [1] 메인 관리자 워커 (Dashboard & API)
 [env.admin]
+name = "cloudpress-admin"
 main = "main-worker.js"
-[[env.admin.d1_databases]]
-binding = "cp_main_db"
-database_name = "cp_main_db"
-database_id = "b90bb93d-4099-4989-9302-e2c6a49cad3d"
+routes = [
+    { pattern = "cloud-press.co.kr/api/*", zone_id = "cloud-press.co.kr" }, # 실제 도메인과 Zone ID로 교체하세요.
+    { pattern = "cloud-press.co.kr/admin/*", zone_id = "cloud-press.co.kr" }
+]
 
+[[env.admin.d1_databases]]
+binding = "DB" # Worker 스크립트에서 env.DB로 접근합니다.
+database_name = "cp_main_db" # D1 데이터베이스의 이름 (사용자 지정)
+database_id = "b90bb93d-4099-4989-9302-e2c6a49cad3d" # 실제 메인 D1 데이터베이스의 ID로 교체하세요.
+
+[[env.admin.kv_namespaces]]
+binding = "CACHE_KV" # Worker 스크립트에서 env.CACHE_KV로 접근합니다.
+id = "4751090f9b1a48508315558a5f91cd3b" # 실제 KV 네임스페이스의 ID로 교체하세요.
+
+[[env.admin.durable_objects]]
+binding = "QUOTA_DO"
+class_name = "QuotaManager"
+
+[[env.admin.durable_objects]]
+binding = "LOCK_DO"
+class_name = "LockManager"
+
+[env.admin.vars]
+SUPABASE_URL = "https://your-supabase-project-ref.supabase.co" # 실제 Supabase URL로 교체하세요.
+# SUPABASE_SERVICE_ROLE_KEY = "your-supabase-service-role-key" # wrangler secret put으로 설정 권장
+# CF_ACCOUNT_ID = "your-cloudflare-account-id" # wrangler secret put으로 설정 권장
+# SUPABASE_ACCOUNT_CONFIGS = "[]" # JSON string of 18 Supabase account configs (필요시)
+ADMIN_EMAIL = "choichoi3227@gmail.com"
+# ADMIN_PASSWORD_HASH = "your_hashed_admin_password" # wrangler secret put으로 설정 권장
+# ADMIN_WEBHOOK_SECRET = "your_webhook_secret" # wrangler secret put으로 설정 권장
+
+# [2] 사이트 실행 엔진 워커 (Template)
 [env.engine]
+name = "cloudpress-site-engine"
 main = "site-worker.js"
+# routes는 각 호스팅 생성 시 동적으로 추가되거나, 와일드카드 패턴으로 설정됩니다.
+
+[[env.engine.d1_databases]]
+binding = "DB" # Worker 스크립트에서 env.DB로 접근합니다.
+database_name = "cp_main_db" # D1 데이터베이스의 이름 (사이트 엔진도 동일한 DB를 사용한다고 가정)
+database_id = "b90bb93d-4099-4989-9302-e2c6a49cad3d" # 실제 사이트 D1 데이터베이스의 ID로 교체하세요.
+
 [[env.engine.kv_namespaces]]
 binding = "CACHE_KV"
-id = "4751090f9b1a48508315558a5f91cd3b"
+id = "4751090f9b1a48508315558a5f91cd3b" # 실제 KV 네임스페이스의 ID로 교체하세요.
 
+# Durable Object 정의 (메인 워커에서 사용)
 [[migrations]]
 tag = "v1"
 new_classes = ["QuotaManager", "LockManager"]
