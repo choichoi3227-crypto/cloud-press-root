@@ -1,6 +1,9 @@
 name = "cloudpress-system"
 compatibility_date = "2024-04-01" # 최신 호환성 날짜를 유지합니다.
 
+# D1 마이그레이션 디렉토리 (wrangler d1 migrations apply 명령어 사용)
+# 실행: wrangler d1 migrations apply cp_main_db --env admin
+
 # [1] 메인 관리자 워커 (Dashboard & API)
 [env.admin]
 name = "cloudpress-admin"
@@ -55,3 +58,7 @@ id = "4751090f9b1a48508315558a5f91cd3b" # 실제 KV 네임스페이스의 ID로 
 [[migrations]]
 tag = "v1"
 new_classes = ["QuotaManager", "LockManager"]
+
+# D1 마이그레이션 파일 위치
+[env.admin.d1_databases_migrations]
+# wrangler d1 migrations apply cp_main_db --env admin --remote 로 스키마 적용
