@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>내 인스턴스 | CloudPress</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-slate-50 flex">
+    <aside class="w-64 min-h-screen bg-white border-r p-6 sticky top-0">
+        <div class="font-black text-2xl mb-12 text-blue-600 italic">CloudPress</div>
+        <nav class="space-y-2">
+            <button class="w-full text-left p-3 rounded-xl bg-blue-50 text-blue-600 font-bold"><i class="fa-solid fa-server mr-2"></i>인스턴스 관리</button>
+            <button class="w-full text-left p-3 rounded-xl text-slate-500 hover:bg-slate-50"><i class="fa-solid fa-globe mr-2"></i>DNS 설정</button>
+            <button class="w-full text-left p-3 rounded-xl text-slate-500 hover:bg-slate-50"><i class="fa-solid fa-credit-card mr-2"></i>결제 및 관리</button>
+        </nav>
+    </aside>
+    <main class="flex-1 p-12">
+        <header class="flex justify-between items-center mb-12">
+            <h1 class="text-4xl font-black text-slate-900">내 호스팅</h1>
+            <button onclick="openCreateModal()" class="bg-blue-600 text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 transition-all">+ 새 사이트 추가</button>
+        </header>
+        <div id="hosting-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- JS로 동적 생성됨 -->
+        </div>
+    </main>
+    <script src="/dashboard.js"></script>
+</body>
+</html>
