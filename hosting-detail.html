@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>사이트 관리 | CloudPress</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body class="bg-slate-50 p-12">
+    <div class="max-w-5xl mx-auto">
+        <div id="realtime-sync-status-root" class="mb-8"></div>
+        <div class="bg-white rounded-3xl p-10 border shadow-sm">
+            <div class="flex justify-between items-center mb-8 border-b pb-6">
+                <h2 class="text-2xl font-bold text-slate-800">보안 및 런타임 설정</h2>
+                <span class="bg-green-100 text-green-700 px-4 py-1 rounded-full text-sm font-bold">운영 중</span>
+            </div>
+            <div class="grid grid-cols-2 gap-10">
+                <div>
+                    <label class="block text-sm font-bold text-slate-500 mb-2">PHP 버전</label>
+                    <select id="php-version" class="w-full border p-3 rounded-xl bg-slate-50 font-bold">
+                        <option value="8.3">PHP 8.3 (최신)</option>
+                        <option value="8.2">PHP 8.2</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-500 mb-2">WAF 보안 수준</label>
+                    <select id="waf-level" class="w-full border p-3 rounded-xl bg-slate-50 font-bold">
+                        <option value="high">엔터프라이즈 (높음)</option>
+                        <option value="med">표준</option>
+                    </select>
+                </div>
+            </div>
+            <button onclick="updateSettings()" class="mt-10 w-full bg-slate-900 text-white py-4 rounded-2xl font-bold hover:bg-slate-800 transition-all">설정 변경 사항 적용</button>
+        </div>
+    </div>
+    <script type="text/babel" src="/RealtimeProgressBar.jsx"></script>
+    <script src="/hosting-detail.js"></script>
+</body>
+</html>
