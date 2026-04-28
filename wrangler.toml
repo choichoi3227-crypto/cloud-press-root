@@ -4,7 +4,7 @@ compatibility_date = "2024-04-01"
 [env.admin]
 main = "main-worker.js"
 [[env.admin.d1_databases]]
-binding = "DB"
+binding = "cp_main_db"
 database_name = "cp_main_db"
 database_id = "b90bb93d-4099-4989-9302-e2c6a49cad3d"
 
